@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+    console.log("start");
+    var ws = new WebSocket("ws://" + location.host + "/");
+
+    ws.onopen = function(event) {
+        stateChange("opened");
+    }
+
+    ws.onmessage = function(event) {
+        document.getElementById("messages").innerHTML += "<li>" + event.data + "</li>";
+    }
+
+    ws.onclose = function(event) { stateChange("closed"); }
+
+    ws.onerror = function(event) { stateChange("error"); }
+
+    function sendMessage() {
+        var msg = document.getElementById("message").value;
+        ws.send(msg);
+        document.getElementById("message").value = "";
+    }
+
+    function stateChange(state) {
+        document.getElementById("state").innerHTML = state;
+    }
+</script>
+</head>
+<body>
+	<h1>Hello!</h1>
+	<section>
+		<input id="message" type="text" />
+		<input type="button" value="Send" onclick="sendMessage()" />
+		<span id="state"></span>
+		<ul id="messages"></ul>
+	</section>
+</body>
+</html>
